@@ -57,7 +57,9 @@ public class SMTPServerConnexion implements AutoCloseable {
 
             srw.writeLine("From: " + mailInformation.getFakeSource());
             srw.writeLine("To: " + mailInformation.getTarget());
-            srw.writeLine("Subject: =?utf-8?B?" + Base64.getEncoder().encodeToString(mailInformation.getSubject().getBytes(StandardCharsets.UTF_8)) + "?=");
+            srw.writeLine("Subject: =?utf-8?B?" +
+                    Base64.getEncoder().encodeToString(mailInformation.getSubject().getBytes(StandardCharsets.UTF_8))
+                    + "?=");
             srw.writeLine("Content-Type: text/plain; charset=utf-8");
             srw.writeLine("");
             srw.writeLine(mailInformation.getContent());
@@ -83,11 +85,15 @@ public class SMTPServerConnexion implements AutoCloseable {
             srw.writeLine("RSET");
             String line = srw.readLine();
             if (!line.startsWith("250")) {
-                App.getLogger().LogError("Erreur dans la reinitialisation du serveur mail, veuillez relancer l'application : \r\n" + line);
+                App.getLogger().LogError(
+                        "Erreur dans la reinitialisation du serveur mail, veuillez relancer l'application : \r\n"
+                                + line);
                 close();
             }
         } catch (IOException exception) {
-            App.getLogger().LogError("Erreur dans la reinitialisation du serveur mail, veuillez relancer l'application : \r\n" + exception.getLocalizedMessage());
+            App.getLogger().LogError(
+                    "Erreur dans la reinitialisation du serveur mail, veuillez relancer l'application : \r\n"
+                            + exception.getLocalizedMessage());
             close();
         }
     }
@@ -97,7 +103,8 @@ public class SMTPServerConnexion implements AutoCloseable {
         try {
             srw.close();
         } catch (IOException exception) {
-            App.getLogger().LogError("Erreur dans la fermeture de la connexion, veuillez relancer l'application : \r\n" + exception.getLocalizedMessage());
+            App.getLogger().LogError("Erreur dans la fermeture de la connexion, veuillez relancer l'application : \r\n"
+                    + exception.getLocalizedMessage());
         }
     }
 }
