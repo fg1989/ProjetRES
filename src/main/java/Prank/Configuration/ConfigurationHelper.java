@@ -70,6 +70,18 @@ public class ConfigurationHelper {
         for (Element message : doc.getRootElement().getChild("Messages").getChildren()) {
             messages.add(new Message(message.getChild("Subject").getText(), message.getChild("Content").getText()));
         }
+
+        if (messages.size() < 1)
+            throw new IOException("Il faut qu'il y ait au moins un messsage dans la liste");
+
+        if (numberOfGroups < 1)
+            throw new IOException("Il doit y avoir au moins un groupe");
+
+        if (numberOfTargetsInGroups < 2)
+            throw new IOException("Il doit y avoir au moins deux cible par groupe");
+
+        if (numberOfTargetsInGroups < adresses.size())
+            throw new IOException("Il doit y avoir au moins une adresse de plus que le nombre de cible");
     }
 
     /**
