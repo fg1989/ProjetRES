@@ -5,6 +5,8 @@ import Stream.SocketReaderWriter;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class SMTPServerConnexion implements AutoCloseable {
     private final SocketReaderWriter srw;
@@ -55,7 +57,8 @@ public class SMTPServerConnexion implements AutoCloseable {
 
             srw.writeLine("From: " + mailInformation.getFakeSource());
             srw.writeLine("To: " + mailInformation.getTarget());
-            srw.writeLine("Subject: " + mailInformation.getSubject());
+            srw.writeLine("Subject: =?utf-8?B?" + Base64.getEncoder().encodeToString(mailInformation.getSubject().getBytes(StandardCharsets.UTF_8)) + "?=");
+            srw.writeLine("Content-Type: text/plain; charset=utf-8");
             srw.writeLine("");
             srw.writeLine(mailInformation.getContent());
             srw.writeLine(".");

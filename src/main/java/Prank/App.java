@@ -17,7 +17,7 @@ public class App {
         SMTPConnexionConfiguration connexionConfiguration = new SMTPConnexionConfiguration("localhost", 25, "prank.com");
 
         try (SMTPServerConnexion serverConnexion = new SMTPServerConnexion(connexionConfiguration)) {
-            SMTPMailInformation mailInformation = new SMTPMailInformation("charlie@criminel.com", "alice@victime.com", "bob@victime.com", "Vous avez gagne un concours", "Bravo pour votre victoire");
+            SMTPMailInformation mailInformation = new SMTPMailInformation("charlie@criminel.com", "alice@victime.com", "bob@victime.com", "Vous avez gagné un concours", "Bravo pour votre victoire, vous avez gagné");
             serverConnexion.sendMail(mailInformation);
         } catch (IOException e) {
             getLogger().LogError("Erreur dans la connexion au serveur : " + e.getLocalizedMessage());

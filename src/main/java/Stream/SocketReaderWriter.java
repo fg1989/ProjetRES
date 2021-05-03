@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class SocketReaderWriter implements AutoCloseable {
     private final Socket s;
@@ -18,8 +19,8 @@ public class SocketReaderWriter implements AutoCloseable {
         s = new Socket(host, port);
         s.setSoTimeout(waitTime);
         bis = new BufferedInputStream(s.getInputStream());
-        isr = new InputStreamReader(bis);
-        ps = new PrintStream(s.getOutputStream());
+        isr = new InputStreamReader(bis, StandardCharsets.UTF_8);
+        ps = new PrintStream(s.getOutputStream(), true, StandardCharsets.UTF_8);
     }
 
     public String readLine() throws IOException {
