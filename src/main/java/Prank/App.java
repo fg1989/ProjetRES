@@ -21,23 +21,29 @@ public class App {
 
     public static void main(String[] args) {
         setLogger(new DebugLogger());
+
         try {
             ConfigurationHelper.ReadConfiguration();
         } catch (IOException | JDOMException | NumberFormatException exception) {
             getLogger().LogError("Erreur dans la lecture de la configuration : " + exception.getLocalizedMessage());
             return;
         }
+
         SMTPConnexionConfiguration connexionConfiguration =
-                new SMTPConnexionConfiguration("localhost", 25, "prank.com");
+                new SMTPConnexionConfiguration(
+                        ConfigurationHelper.getTargetHost(),
+                        ConfigurationHelper.getPortNumber(),
+                        ConfigurationHelper.getUserName());
+
         try (SMTPServerConnexion serverConnexion = new SMTPServerConnexion(connexionConfiguration)) {
-            for (int i = 0; i < ConfigurationHelper.readNumberOfGroups(); i++) {
-                List<String> adresses = new ArrayList<>(ConfigurationHelper.readConfiguration());
+            for (int i = 0; i < ConfigurationHelper.getNumberOfGroups(); i++) {
+                List<String> adresses = new ArrayList<>(ConfigurationHelper.getTargetAdresses());
                 String sender = removeRandomElemInList(adresses);
                 Message message =
-                        ConfigurationHelper.readMessages().get(r.nextInt(ConfigurationHelper.readMessages().size()));
-                for (int j = 0; j < ConfigurationHelper.readNumberOfTargetInGroup(); j++) {
+                        ConfigurationHelper.getMessages().get(r.nextInt(ConfigurationHelper.getMessages().size()));
+                for (int j = 0; j < ConfigurationHelper.getNumberOfTargetInGroup(); j++) {
                     SMTPMailInformation mailInformation = new SMTPMailInformation(
-                            "prank@prank.com",
+                            ConfigurationHelper.getUserName(),
                             sender,
                             removeRandomElemInList(adresses),
                             message.getHeader(),
