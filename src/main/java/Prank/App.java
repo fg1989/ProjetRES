@@ -1,6 +1,5 @@
 package Prank;
 
-import Logger.DebugLogger;
 import Logger.ILogger;
 import Logger.StandardLogger;
 import Prank.Configuration.ConfigurationHelper;
@@ -16,11 +15,24 @@ import java.util.List;
 import java.util.Random;
 
 public class App {
+    /**
+     * Le generateur de nombre aleatoire de l'application
+     */
     private static final Random r = new Random();
+
+    /**
+     * Le logger utilise par l'application
+     */
     private static ILogger logger = new StandardLogger();
 
+    /**
+     * La methode principale de l'application
+     *
+     * @param args
+     */
     public static void main(String[] args) {
-        setLogger(new DebugLogger());
+        //Activer pour passer en mode debug
+        //setLogger(new DebugLogger());
 
         try {
             ConfigurationHelper.ReadConfiguration();
@@ -43,7 +55,6 @@ public class App {
                         ConfigurationHelper.getMessages().get(r.nextInt(ConfigurationHelper.getMessages().size()));
                 for (int j = 0; j < ConfigurationHelper.getNumberOfTargetInGroup(); j++) {
                     SMTPMailInformation mailInformation = new SMTPMailInformation(
-                            ConfigurationHelper.getUserName(),
                             sender,
                             removeRandomElemInList(adresses),
                             message.getHeader(),
@@ -56,14 +67,30 @@ public class App {
         }
     }
 
+    /**
+     * Recupère le logger courant de l'application
+     *
+     * @return Le logger courant de l'application
+     */
     public static ILogger getLogger() {
         return logger;
     }
 
+    /**
+     * Change le logger courant de l'application
+     *
+     * @param logger Le nouveau logger
+     */
     public static void setLogger(ILogger logger) {
         App.logger = logger;
     }
 
+    /**
+     * Methode helper qui enlève un élément au hasard d'une liste
+     *
+     * @param list La liste dont on souhaite enlever l'élément
+     * @return L'élément qui a été enlevé
+     */
     public static String removeRandomElemInList(List<String> list) {
         int index = r.nextInt(list.size());
         String value = list.get(index);
