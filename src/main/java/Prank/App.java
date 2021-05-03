@@ -8,6 +8,7 @@ import Prank.Configuration.Message;
 import SMTP.SMTPConnexionConfiguration;
 import SMTP.SMTPMailInformation;
 import SMTP.SMTPServerConnexion;
+import org.jdom2.JDOMException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +21,12 @@ public class App {
 
     public static void main(String[] args) {
         setLogger(new DebugLogger());
-        ConfigurationHelper.ReadConfiguration();
+        try {
+            ConfigurationHelper.ReadConfiguration();
+        } catch (IOException | JDOMException | NumberFormatException exception) {
+            getLogger().LogError("Erreur dans la lecture de la configuration : " + exception.getLocalizedMessage());
+            return;
+        }
         SMTPConnexionConfiguration connexionConfiguration =
                 new SMTPConnexionConfiguration("localhost", 25, "prank.com");
         try (SMTPServerConnexion serverConnexion = new SMTPServerConnexion(connexionConfiguration)) {

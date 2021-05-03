@@ -1,33 +1,48 @@
 package Prank.Configuration;
 
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigurationHelper {
-    public static void ReadConfiguration() {
+    private static List<String> adresses;
+    private static int numberOfGroups;
+    private static int numberOfTargetsInGroups;
+    private static List<Message> messages;
+
+    public static void ReadConfiguration() throws IOException, JDOMException {
+        adresses = Files.readAllLines(Paths.get("adresses.config"));
+        SAXBuilder builder = new SAXBuilder();
+        Document doc = builder.build(new File("configuration.config"));
+        numberOfGroups = Integer.parseInt(doc.getRootElement().getChild("NumberOfGroups").getText());
+        numberOfTargetsInGroups = Integer.parseInt(doc.getRootElement().getChild("NumberOfTargetsInGroups").getText());
+        messages = new ArrayList<>();
+        for (Element message : doc.getRootElement().getChild("Messages").getChildren()) {
+            messages.add(new Message(message.getChild("Subject").getText(), message.getChild("Content").getText()));
+        }
     }
 
     public static List<String> readConfiguration() {
-        List<String> list = new ArrayList<>();
-        list.add("alice@victime.com");
-        list.add("bob@victime.com");
-        list.add("paul@victime.com");
-        list.add("jean@victime.com");
-        return list;
+        return adresses;
     }
 
     public static List<Message> readMessages() {
-        List<Message> list = new ArrayList<>();
-        list.add(new Message("Vous avez gagné", "Bravo, vous avez gagné un concours\r\nVenez chez nous pour le récupérer"));
-        list.add(new Message("Rendez vous urgent", "Demain, je dois absolument te voir pour parler de quelque chose d'important"));
-        return list;
+        return messages;
     }
 
     public static int readNumberOfGroups() {
-        return 2;
+        return numberOfGroups;
     }
 
     public static int readNumberOfTargetInGroup() {
-        return 2;
+        return numberOfTargetsInGroups;
     }
 }
